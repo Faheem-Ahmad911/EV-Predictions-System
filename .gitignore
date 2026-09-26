@@ -1,0 +1,52 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Environment variables and secrets
+.env
+*.env
+.secret*
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Testing and linting caches
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Notebook checkpoints
+.ipynb_checkpoints/
+
+# MLflow / Experiment tracking
+mlruns/
+wandb/
+
+# Data and Models: NEVER commit raw data or model weights to Git
+# (These are tracked via DVC in data/*.dvc and models/*.dvc)
+data/
+models/
+*.csv
+*.xlsx
+*.parquet
+*.pkl
+*.joblib
+*.onnx
+*.pt
+*.h5
+
+# DVC local configs and caches
+.dvc/cache/
+.dvc/tmp/
+.dvc/config.local

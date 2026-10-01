@@ -12,7 +12,11 @@ env/
 # Environment variables and secrets
 .env
 *.env
-.secret*
+secrets.json
+secrets.yaml
+*.secret
+*.secrets
+!/.secrets.baseline
 
 # IDEs
 .idea/

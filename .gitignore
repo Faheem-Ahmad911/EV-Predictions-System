@@ -17,6 +17,11 @@ env/
 client_secret*.json
 oauth*.json
 credentials*.json
+secrets.json
+secrets.yaml
+*.secret
+*.secrets
+!/.secrets.baseline
 
 # IDEs
 .idea/

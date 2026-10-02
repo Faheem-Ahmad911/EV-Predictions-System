@@ -35,7 +35,12 @@ wandb/
 
 # Data and Models: NEVER commit raw data or model weights to Git
 # (These are tracked via DVC in data/*.dvc and models/*.dvc)
-data/
+data/*
+!data/
+!data/raw/
+!data/raw/*.dvc
+!data/processed/
+!data/processed/*.dvc
 models/
 *.csv
 *.xlsx

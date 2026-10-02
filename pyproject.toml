@@ -3,6 +3,7 @@ name = "ev-predictions-system"
 version = "0.1.0"
 requires-python = ">=3.13"
 dependencies = [
+    "dvc[gdrive]>=3.67.1",
     "joblib>=1.6.0",
     "numpy>=2.5.3",
     "openpyxl>=3.1.5",

@@ -5,7 +5,7 @@
 [![Code Style](https://img.shields.io/badge/code%20style-ruff-black.svg)](https://github.com/astral-sh/ruff)
 [![Testing](https://img.shields.io/badge/tests-pytest-yellow.svg)](https://pytest.org/)
 
-A production-grade, collaborative Machine Learning repository built to predict **Electric Vehicle (EV) charging costs per kWh (`cost_per_kwh_usd`)** across global charging networks.
+A collaborative Machine Learning assignment repository built to predict **Electric Vehicle (EV) charging costs per kWh (`cost_per_kwh_usd`)** across global charging networks. Release readiness and outstanding team evidence are recorded in [REPORT.md](REPORT.md).
 
 This project demonstrates rigorous Git collaboration, reproducible experiment tracking with **DVC**, automated code hygiene with **pre-commit hooks**, continuous integration with **GitHub Actions**, and a strict multi-tier release lifecycle (`dev` → `staging` → `main`).
 
@@ -271,6 +271,56 @@ must verify the remote from a fresh checkout.
 
 ### Current next action
 
-Faheem must open the `data/initial-dataset` pull request into `dev` and assign
-Moeer as reviewer. Moeer must complete the verification above before the branch
-is merged.
+The dataset is now in [PR #2](https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/2).
+During the October 3 audit it targeted `main`; it must target `dev` to follow the
+assignment. Moeer must finish the verification above before approval.
+
+## Complete setup using Faheem's DVC remote
+
+Run from the repository root. The original raw pointer and remote are preserved;
+there is no alternative download or replacement dataset in this pipeline.
+
+```powershell
+uv sync --locked
+uv run pre-commit install
+# Use the client JSON Faheem sends securely. Keep the file outside this repo.
+uv run python -m src.configure_drive "C:/path/outside-repo/client.json"
+# Authorize with your own Google account, shared-folder access and OAuth test-user access.
+uv run dvc pull
+uv run python -m src.verify_dataset
+uv run dvc dag
+uv run dvc repro
+uv run pytest
+uv run pre-commit run --all-files
+```
+
+`src.configure_drive` writes the client ID and secret only to ignored
+`.dvc/config.local`, without printing them. Never copy another member's token or
+local config. `src.verify_dataset` checks the pointer's MD5 and size, schema,
+ranges, null counts and Git ignore/tracking status. The DVC graph must show
+`data/raw/ev_charging_stations.csv.dvc -> prepare -> train -> evaluate`.
+
+All learned imputation/encoding/scaling fits after the split, inside the model
+pipeline. `configs/params.yaml` controls the paths, seed, split and model settings.
+The notebook pair is `notebooks/01-eda.ipynb` and `notebooks/01-eda.py`.
+
+```powershell
+# After the exact dataset is available, restart and execute all notebook cells.
+uv run jupyter nbconvert --to notebook --execute --inplace notebooks/01-eda.ipynb
+uv run nbstripout notebooks/01-eda.ipynb
+uv run jupytext --sync notebooks/01-eda.ipynb
+# After a real-data reproduction, preserve and upload all resulting artifacts.
+uv run dvc push
+git add dvc.yaml dvc.lock configs/params.yaml metrics.json
+git commit -m "feat: record verified EV dataset baseline"
+# Push only a feature branch, then open a reviewed PR into dev.
+```
+
+The CI jobs `Lint and tests` and `Data checks and smoke train` run on PRs into
+`dev`, `staging` and `main`. CI uses a deterministic synthetic fixture, without
+Google credentials. `uv run python -m src.smoke` runs the same isolated smoke test
+locally. Its scores are not dataset or release metrics.
+
+See [the completion runbook](docs/COMPLETION.md) for experiments, required
+collaboration evidence and the reviewed release sequence. Do not commit scores
+or a DVC lock from a substitute dataset to satisfy missing release evidence.

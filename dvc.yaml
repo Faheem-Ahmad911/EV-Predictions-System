@@ -1,0 +1,52 @@
+vars:
+  - configs/params.yaml
+stages:
+  prepare:
+    cmd: python -m src.data
+    deps:
+      - src/data.py
+      - src/validate.py
+      - src/utils.py
+      - ${data.raw_path}
+      - uv.lock
+      - .python-version
+    params:
+      - configs/params.yaml:
+          - seed
+          - data
+          - split
+    outs:
+      - ${data.processed_dir}
+  train:
+    cmd: python -m src.train
+    deps:
+      - src/train.py
+      - src/utils.py
+      - ${data.processed_dir}/train.csv
+      - uv.lock
+      - .python-version
+    params:
+      - configs/params.yaml:
+          - seed
+          - data
+          - train
+    outs:
+      - ${train.model_path}
+  evaluate:
+    cmd: python -m src.evaluate
+    deps:
+      - src/evaluate.py
+      - src/utils.py
+      - ${train.model_path}
+      - ${data.processed_dir}/test.csv
+      - uv.lock
+      - .python-version
+    params:
+      - configs/params.yaml:
+          - seed
+          - data
+          - train
+          - evaluate
+    metrics:
+      - ${evaluate.metrics_file}:
+          cache: false

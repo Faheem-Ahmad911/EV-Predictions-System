@@ -13,6 +13,10 @@ env/
 .env
 *.env
 .secret*
+!/.secrets.baseline
+client_secret*.json
+oauth*.json
+credentials*.json
 
 # IDEs
 .idea/
@@ -35,12 +39,8 @@ wandb/
 
 # Data and Models: NEVER commit raw data or model weights to Git
 # (These are tracked via DVC in data/*.dvc and models/*.dvc)
-data/*
-!data/
-!data/raw/
-!data/raw/*.dvc
-!data/processed/
-!data/processed/*.dvc
+# Keep parent directories visible so DVC can discover the raw pointer on Windows.
+# Local data rules live in data/.gitignore.
 models/
 *.csv
 *.xlsx
@@ -55,3 +55,7 @@ models/
 .dvc/cache/
 .dvc/tmp/
 .dvc/config.local
+
+# Local verification outputs
+artifacts/
+tmp/

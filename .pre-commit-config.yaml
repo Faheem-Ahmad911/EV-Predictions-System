@@ -1,0 +1,35 @@
+repos:
+  # 1. Standard Git Hygiene & Large File Blocking
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-added-large-files
+        args: ['--maxkb=1024']  # Strictly block any file larger than 1 MB
+
+  # 2. Python Linting and Formatting with Ruff
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.9
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+
+  # 3. Clean Notebooks: Strip outputs and metadata
+  - repo: https://github.com/kynan/nbstripout
+    rev: 0.8.1
+    hooks:
+      - id: nbstripout
+
+  # 4. Secret and API Key Scanning
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline', '--exclude-lines', '"commit_sha": "[0-9a-f]{40}"']
+        # Git provenance in metrics is a public identifier, not an API key.
+        # Generated content hashes are not credentials; config files stay scanned.
+        exclude: '(\.dvc$|^dvc\.lock$)'

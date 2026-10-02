@@ -19,7 +19,9 @@ def load_raw_data(filepath: str) -> pd.DataFrame:
     return pd.read_csv(path)
 
 
-def clean_and_prepare(df: pd.DataFrame) -> pd.DataFrame:
+def clean_and_prepare(
+    df: pd.DataFrame, target_column: str = "cost_per_kwh_usd"
+) -> pd.DataFrame:
     """Clean the raw EV dataset."""
     df = df.copy()
 
@@ -28,17 +30,12 @@ def clean_and_prepare(df: pd.DataFrame) -> pd.DataFrame:
         df = df.drop(columns=["id"])
 
     # Ensure target column has no missing values
-    if "cost_per_kwh_usd" in df.columns:
-        df = df.dropna(subset=["cost_per_kwh_usd"])
-
-    # Fill missing values for categorical and numerical features
-    categorical_cols = df.select_dtypes(include=["object", "string"]).columns
-    for col in categorical_cols:
-        df[col] = df[col].fillna("Unknown")
-
-    numeric_cols = df.select_dtypes(include=["number"]).columns
-    for col in numeric_cols:
-        df[col] = df[col].fillna(df[col].median())
+    if target_column not in df.columns:
+        raise ValueError(f"Missing target column: {target_column}")
+    df = df.dropna(subset=[target_column])
+    # Feature imputation belongs inside the fitted training pipeline.
+    # Remove identical records before splitting to avoid cross-split duplicates.
+    df = df.drop_duplicates()
 
     return df
 
@@ -62,12 +59,15 @@ def prepare_dataset(params_path: str = "configs/params.yaml") -> None:
     seed = params["seed"]
 
     df = load_raw_data(raw_path)
-    df_clean = clean_and_prepare(df)
+    from src.validate import validate_data
+
+    validate_data(df, target_column=params["data"]["target_column"])
+    df_clean = clean_and_prepare(df, params["data"]["target_column"])
     train_df, test_df = split_data(df_clean, test_size=test_size, random_state=seed)
 
     processed_dir.mkdir(parents=True, exist_ok=True)
-    train_df.to_csv(processed_dir / "train.csv", index=False)
-    test_df.to_csv(processed_dir / "test.csv", index=False)
+    train_df.to_csv(processed_dir / "train.csv", index=False, lineterminator="\n")
+    test_df.to_csv(processed_dir / "test.csv", index=False, lineterminator="\n")
     print(
         f"Data prepared successfully: {len(train_df)} train rows, {len(test_df)} test rows saved to {processed_dir}"
     )

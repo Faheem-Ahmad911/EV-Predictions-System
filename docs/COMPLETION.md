@@ -1,26 +1,42 @@
-# Assignment completion runbook
+# Next steps in the instructor's order
 
-This runbook records the remaining steps; it is not evidence that they happened.
+1. Faheem (repository owner) securely supplies the OAuth client JSON, verifies
+   Moeer's Google account can access the Drive folder and OAuth project, and
+   confirms dataset source URL/license and subset procedure. Keep the existing
+   pointer and storage remote.
+2. Moeer runs the configure_drive and verify_dataset commands from README in a
+   fresh checkout. Record the actual dvc pull output and matching MD5. Then execute
+   the notebook and real pipeline, commit dvc.lock/metrics.json, dvc push, and open
+   a feature PR into dev. Do not substitute the older local Kaggle sample.
+3. Faheem reviews the workflow-compliance PR into dev. Once its checks pass and
+   review is resolved, squash-merge it. No direct feature or dev PR goes into main.
+4. The owner applies scripts/protect_branches.ps1 -Apply (preview without -Apply).
+   This requires GitHub admin access; Moeer03 currently has push access only.
+   Verify both approvals and failed required checks actually block merging.
+5. Both members run at least three experiments from committed code on their own
+   exp branches created from dev. Save dvc exp show, data hash and rationale. Promote
+   winners to feat branches with reviewed PRs; preserve a rejected exp branch.
+6. Faheem authors a justified data-update PR into dev. Moeer verifies git checkout
+   plus dvc checkout restores old and new versions. Record real hashes and reviews.
+7. Both members independently change the same params line on separate branches.
+   After the first reviewed merge, the second author rebases on dev, resolves the
+   real conflict, reproduces the pipeline and documents the resolution.
+8. Each member reviews at least two distinct teammate PRs. A merged PR or a review
+   of one's own work does not count as independent teammate review. Resolve the
+   actual changes-requested review before claiming approval.
+9. Update REPORT.md with final facts, source citations, member statements,
+   experiment tables and actual screenshot/PR links. The initial wrong merge
+   routes remain acknowledged in the history.
+10. Open dev -> staging as release: v1.0. A teammate who did not train the final
+    model clones fresh, pulls DVC artifacts, reproduces and posts exact metrics.
+    After approval, merge staging; then open and approve staging -> main. Tag
+    model-v1.0 on that final main commit. Do not tag the current incomplete model.
 
-## 1. Verify and review Faheem's dataset
-
-PR #2: https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/2
-
-- Change the PR base from main to dev.
-- Use your own Google account, with shared-folder and OAuth test-user access.
-- Configure the securely supplied OAuth client JSON using `python -m src.configure_drive`.
-- From a fresh checkout of the corrected data branch, run `uv sync --locked`,
-  `uv run dvc pull`, `uv run python -m src.verify_dataset`, and `uv run pytest`.
-  The verification helper is on the completion branch; on the original data
-  branch use Faheem's Test-Path/Get-FileHash/check-ignore/ls-files commands.
-- Confirm DVC discovers the raw pointer with `uv run dvc dag`. The completion
-  branch fixes a Windows ignore-rule discovery problem without changing it.
-- Post the actual pull output, MD5, tests, and Git checks. The draft review in
-  `docs/DATA_PR_REVIEW.md` describes what has and has not been verified.
-
-## 2. Establish the actual baseline
+## Commands after the OAuth client arrives
 
 ```powershell
+uv sync --locked
+uv run python -m src.configure_drive "C:/outside-repo/client.json"
 uv run dvc pull
 uv run python -m src.verify_dataset
 uv run dvc repro
@@ -28,20 +44,13 @@ uv run jupyter nbconvert --to notebook --execute --inplace notebooks/01-eda.ipyn
 uv run nbstripout notebooks/01-eda.ipynb
 uv run jupytext --sync notebooks/01-eda.ipynb
 uv run dvc push
-git add dvc.lock metrics.json notebooks
-git commit -m "feat: record verified dataset baseline"
 ```
 
-Use committed implementation code for the baseline and experiments. Preserve
-Faheem's raw file, nested pointer, and storage remote. Local files from older
-experiments against other data are not release evidence. The current pipeline
-does not consume those files.
+Record outputs against committed code and the exact initial pointer. Cached
+reproduction preserves the original commit SHA; forced recomputation at a later
+commit may log a new SHA. Never edit provenance to manufacture identical results.
 
-## 3. Experiments and promotion
-
-Once the baseline is reviewed into dev, each member creates their own experiment
-branch from updated dev and runs at least three experiments on committed code.
-For Moeer:
+## Example experiments after a reviewed baseline reaches dev
 
 ```powershell
 git switch -c exp/moeer-dvc-tuning origin/dev
@@ -51,49 +60,6 @@ uv run dvc exp run -n moeer-initial-200 --set-param configs/params.yaml:train.n_
 uv run dvc exp show
 ```
 
-Faheem independently runs his own three variants. Save the actual tables in
-REPORT.md with the dataset hash. Compare RMSE, MAE, R2 and model size; do not
-assume any particular configuration wins. Repeated holdout-based selection is
-an assignment exercise, not an unbiased final performance estimate.
-
-Apply the selected experiment to a clean feat branch with `dvc exp apply`,
-reproduce, upload artifacts with `dvc push`, then commit/push and open a reviewed
-PR into dev. Preserve an abandoned experiment branch and explain its rejection.
-
-## 4. Required team evidence
-
-- Both members: at least two authored merged PRs and two teammate reviews.
-  Use separate meaningful PRs for notebook/CI/pipeline changes as appropriate.
-- Record a substantive changes-requested review and its resolution.
-- Data owner: make a justified data update, `dvc add` the same raw path and
-  `dvc push` before Git push. Demonstrate git checkout plus dvc checkout restoring
-  old and new dataset hashes. Never alter the initial pointer just to unblock a pull.
-- Both members edit the same params line on separate branches; after the first
-  reviewed merge, the second author rebases, resolves the real conflict and tests.
-- Capture actual hook rejection and failing/passing CI screenshots. A synthetic
-  smoke run is not a GitHub Actions result or a screenshot.
-- Repository owner: add the instructor, require one approval and both named CI
-  checks on dev/staging/main, and block force pushes.
-- Confirm upstream dataset URL/license and starter-code provenance in REPORT.md.
-
-## 5. Reviewed release
-
-Open dev -> staging titled `release: v1.0`. Faheem (or a teammate who did not train
-the final model) must clone fresh, switch to the proposed release revision,
-run `uv sync --locked`, `uv run dvc pull`, and `uv run dvc repro`, then post the
-exact metrics.json comparison. Cached reproduction preserves the original
-training SHA. Forced recomputation at another commit changes provenance; never
-edit SHA fields to make files appear equal.
-
-After successful reproduction and approval, merge into staging; open and obtain
-approval for staging -> main. Only after that merge:
-
-```powershell
-git switch main
-git pull --ff-only
-git tag -a model-v1.0 -m "First production model"
-git push origin model-v1.0
-```
-
-Complete REPORT.md with real PR/review links, experiment results, screenshots,
-tag SHA, lock/metrics and member-written retrospective/contribution paragraphs.
+Faheem runs and records his own three variants. Select a winner using actual
+RMSE/MAE/R2 and model cost. Repeatedly tuning on a holdout is a course exercise;
+it does not produce an unbiased estimate of final model performance.

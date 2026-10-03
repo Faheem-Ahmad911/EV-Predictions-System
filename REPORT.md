@@ -1,139 +1,138 @@
-# EV Predictions System - assignment report
+# EV Predictions System - assignment progress and evidence
 
-Audit date: October 3, 2026.
-Repository: https://github.com/Faheem-Ahmad911/EV-Predictions-System
+Audit date: October 3, 2026. Repository:
+https://github.com/Faheem-Ahmad911/EV-Predictions-System
 
-**Status: implementation prepared; dataset authentication, real-data execution,
-collaboration evidence and release remain incomplete.** No release tag or final
-model scores are claimed. See [the completion runbook](docs/COMPLETION.md).
+**Status: code and CI are implemented; the dataset-based release is incomplete.**
+This report distinguishes completed work, historical workflow mistakes and evidence
+still required. It is not a claim that model-v1.0 is ready.
 
 ## Team and sources
 
-| Member | Responsibility |
+| Member | Ownership |
 | --- | --- |
-| Faheem Ahmad | Dataset, shared DVC remote, hygiene, data changes and reviews |
-| Moeer | Pipeline integration, EDA, CI, model experiments and release coordination |
+| Faheem Ahmad | Dataset, Drive/OAuth sharing, data changes, reviews, repository administration |
+| Muhammad Moeer (Moeer03) | Model pipeline, notebook, CI, experiments and release coordination |
 
-The dataset used by this implementation is exclusively Faheem's initial
-`data/raw/ev_charging_stations.csv`, represented by
-`data/raw/ev_charging_stations.csv.dvc` on `data/initial-dataset`.
-Faheem must confirm the upstream URL, license and subset procedure before final
-submission. Starter code is the team's initial modular implementation at
-`afeaec4`; confirm whether external coursework or a notebook requires credit.
+The project targets cost_per_kwh_usd in Faheem's exact initial dataset.
+The committed pointer is data/raw/ev_charging_stations.csv.dvc, recording
+6,943,712 bytes and its MD5. The upstream dataset URL, license and sampling
+procedure still need confirmation from Faheem. The starter modules originate
+in afeaec4; the team must confirm any external starter-code credit.
 
-The earlier local alternative Kaggle sample and experiments are not used by this
-pipeline and are not counted as evidence for this dataset. Existing local files
-and old experiment branches have been preserved.
+The earlier alternative local Kaggle sample is not used by this pipeline.
+Experiments on that sample do not count as results for Faheem's dataset.
 
-## Verified implementation
+## Actual PR and merge history
 
-Local implementation commits: `7dac9cc` (pipeline, DVC discovery, verification,
-tests and environment) and `e70f963` (paired notebook and PR CI). They are on
-`feat/moeer-assignment-completion`; publishing awaits the correct GitHub login.
+| PR | Author | Route | Observed outcome |
+| --- | --- | --- | --- |
+| [#1](https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/1) | Faheem | feat/pre-commit -> main | Merged without a recorded teammate review; wrong feature target |
+| [#2](https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/2) | Faheem | data/initial-dataset -> main | Merged; no recorded independent pull/hash review; wrong data target |
+| [#3](https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/3) | Moeer | feat/moeer-assignment-completion -> main | Merged; CI passed, no recorded teammate approval; bypassed dev/staging |
+| [#4](https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/4) | Faheem | main -> dev | Merged despite Moeer's unresolved changes-requested review; synchronized dev |
+| [#5](https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/5) | Moeer | dev -> main | Merged; CI passed, but skipped staging and independent reproduction |
+| [#6](https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/6) | Moeer | feat/moeer-workflow-compliance -> dev | Workflow corrections; red/green CI recorded; teammate review and merge pending |
 
-- Incorporated Faheem's data branch through `04b6007`. The original pointer,
-  expected dataset bytes and Google Drive remote remain unchanged.
-- Corrected Windows pointer discovery through ignore rules, retaining the same
-  nested pointer path. A DVC integration test checks discovery and execution.
-- Added prepare/train/evaluate stages with code, environment and parameter
-  dependencies. All paths and the single seed are in configs/params.yaml.
-- Moved feature imputation into the training pipeline to prevent holdout leakage.
-  Added schema/range/null checks, duplicate removal and deterministic tests.
-- Added an output-free Jupytext notebook pair using tested src functions. Execution
-  against Faheem's data remains pending its download.
-- Added PR CI for dev/staging/main: `Lint and tests` and
-  `Data checks and smoke train`. CI operates without private Drive credentials.
-- Added local OAuth configuration and dataset verification commands. Secrets go
-  only to ignored .dvc/config.local; verification checks hash, size and Git status.
-- Installed pre-commit locally and reused the team's guardrails, aligning Ruff
-  with the locked environment. Generated DVC content hashes are excluded from
-  the secret hook; credentials and source code remain scanned.
+main is at ca24eb5, dev at ccdcd63, and staging remains at scaffold commit
+e28273d at this audit. No release tag exists. The later synchronization does not
+retroactively make the earlier merges compliant. Keep this history visible.
 
-## Reproducibility record
+Moeer's substantive [changes-requested review](https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/4#pullrequestreview-5400083470)
+asked for accurate reporting and independent DVC verification. The inaccurate
+report is corrected in the workflow-compliance feature branch. Dataset
+verification remains unresolved; that review has not become an approval.
 
-| Item | Value / status |
+Numerical authored-merge counts are Faheem 3 and Moeer 2, but #4/#5 are
+synchronization PRs. Recorded teammate-review coverage remains Faheem 0 PRs,
+Moeer 1 PR. Each member must review at least two distinct teammate PRs; repeated
+reviews of the same PR do not satisfy this requirement.
+
+## Implementation and validation
+
+- Faheem's original storage remote and raw pointer are preserved.
+- prepare/train/evaluate use configs/params.yaml and a single seed. Imputation,
+  encoding and scaling fit only on training data. Windows pointer discovery is fixed.
+- Shared schema/range/null checks, deterministic splitting and verification tools
+  are implemented. The raw CSV, model weights and OAuth credentials are not in Git.
+- The EDA notebook is paired with a percent-format script and outputs are stripped.
+  Execution against the exact shared dataset remains pending download.
+- CI runs lint, format, tests, hooks, schema checks and synthetic smoke training.
+  [PR #3 CI](https://github.com/Faheem-Ahmad911/EV-Predictions-System/actions/runs/37097204039)
+  and [PR #4 CI](https://github.com/Faheem-Ahmad911/EV-Predictions-System/actions/runs/37099230916)
+  passed. These use synthetic fixtures and do not prove Drive access or model quality.
+- PR #6 adds a Branch policy job rejecting incorrect PR
+  targets and missing release files. It also verifies that actual large-file and
+  fake-secret commit attempts are rejected in a temporary repository.
+- Existing local validation is recorded in docs/evidence/local-validation.md and
+  docs/evidence/guardrails.txt. Updated CI evidence is described in
+  docs/evidence/workflow-compliance.md.
+
+## Reproducibility table
+
+| Item | Current evidence |
 | --- | --- |
-| Shared DVC remote | storage; exact Google Drive URL in .dvc/config |
-| Dataset pointer | data/raw/ev_charging_stations.csv.dvc; unchanged from Faheem's branch |
-| Dataset size | 6,943,712 bytes, as recorded by Faheem; local download pending |
-| Actual local dataset MD5 | Unavailable until authenticated dvc pull succeeds |
-| Environment | pyproject.toml + uv.lock; Python 3.14.4 via .python-version |
-| Seed and split | 42; test_size 0.2 |
-| Baseline configuration | Random forest; 100 trees; maximum depth 10 |
-| Real-data dvc.lock / metrics.json | Pending; no substitute or synthetic release files committed |
-| Final metrics and selected model | Pending baseline and experiments on the exact dataset |
-| Independent reproduction | Pending a teammate's fresh clone and posted comparison |
-| model-v1.0 tag and release SHA | Pending approved dev -> staging -> main promotion |
+| Shared remote | storage in .dvc/config; Google Drive |
+| Initial dataset hash | MD5 recorded in data/raw/ev_charging_stations.csv.dvc; independent local verification pending |
+| Dataset size | 6,943,712 bytes recorded by data owner |
+| Environment | pyproject.toml + uv.lock; Python 3.14.4 |
+| Parameters | seed 42; test_size 0.2; random forest, 100 trees, max_depth 10 |
+| Pipeline source | dvc.yaml and src modules are committed |
+| Real-data lock / metrics | dvc.lock and metrics.json are absent; no results are claimed |
+| Final model and commit SHA | Pending experiments on the exact shared dataset |
+| Independent reproduction | Pending a different teammate's fresh clone, dvc pull and dvc repro |
+| Release tag and SHA | No model-v1.0 tag; no approved staging release |
 
-The DVC integration test runs in a temporary Git/DVC repository using a synthetic
-fixture. It verifies stage execution, unchanged-result reuse and invalidation of
-train/evaluate when a training parameter changes, without rebuilding prepare.
-This validates pipeline mechanics, not Google Drive or real-data reproducibility.
+Moeer does not yet have the OAuth client JSON. GitHub authentication as Moeer03
+works, but it does not provide Google Drive authentication. Faheem must securely
+share the OAuth client, grant the correct Google account access and add it as a
+test user if needed. Personal tokens and .dvc/config.local must not be shared.
 
-Local validation: **21 tests passed**. Ruff lint/format checks passed. Notebook
-pairing and stripped outputs were verified. Actual hook probes rejected a 5 MB
-file and a deliberately invalid private-key fixture; neither was committed.
-See [hook evidence](docs/evidence/guardrails.txt). The 300-row synthetic smoke run
-completed all stages (240 training / 60 evaluation rows). Its metrics are stored
-only in ignored local artifacts and are not reported as model results.
+## Experiments and required evidence
 
-## Dataset PR review
-
-[PR #2](https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/2) is open.
-The original branch environment synced and **4 tests passed**. The CSV is ignored
-and not tracked by Git. The dataset is absent locally, and a targeted DVC pull
-timed out after 40 seconds with no local OAuth client configured. Approval is
-pending successful authenticated download and hash verification.
-
-The PR currently targets main; it must target dev. Windows pointer discovery
-also needs the ignore-rule correction. [Draft review](docs/DATA_PR_REVIEW.md).
-
-## Experiments and winner
-
-No experiments on Faheem's exact dataset are claimed yet. Both members must run
-at least three experiments against committed code and record `dvc exp show`
-results with the dataset hash. Earlier local results on another sample are not
-comparable and have not been promoted. Winner and abandonment rationale remain
-pending real measurements; commands are in docs/COMPLETION.md.
-
-## Collaboration and release evidence
-
-| Requirement | Evidence / remaining action |
+| Requirement | Status / next action |
 | --- | --- |
-| Branches | dev, staging and main exist; API reported all unprotected on audit date |
-| Protection | Owner must require PR, one approval and both CI checks; block force pushes |
-| Existing guardrails PR | [PR #1](https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/1) merged into main; this differs from the required dev flow |
-| Each member authors two merged PRs | Not yet evidenced; complete genuine separate contributions |
-| Each member reviews two teammate PRs | Pending verification and actual reviews |
-| Changes-requested review | Draft prepared; posting awaits sign-in as Moeer03 |
-| Data-update PR / old-new checkout | Pending a justified update by Faheem and both-version restoration |
-| Two-person parameter conflict | Pending real separate edits, rebase, resolution and linked PR |
-| Abandoned experiment | Existing local branch is from different data; document a relevant rejected run |
-| Guardrail screenshot | Capture actual hook rejection screenshot; logs alone are not the requested screenshot |
-| Failing/passing CI screenshots | Pending actual GitHub workflow runs and enforcement |
-| Release PRs and tag | No tags returned by GitHub during this audit; promotion awaits prerequisites |
-| Instructor access and team roles | Repository owner must confirm |
+| Three experiments per member | Pending committed-code runs on the actual dataset; save dvc exp show tables |
+| Winner promotion | Pending real measurements; apply the chosen experiment on a feature branch into dev |
+| Abandoned exp branch | Prior local branches concern another sample; publish a relevant rejected experiment with rationale |
+| Data-update PR / old-new recovery | Faheem must make a justified update and reviewer must restore both DVC versions |
+| Two-person params conflict | Pending separate authors' changes to the same params line, rebase and recorded resolution |
+| Guardrail evidence | Local rejection logs exist; CI now performs actual rejected commit attempts |
+| Failed and passing CI evidence | PR #6 records actual red/green runs and screenshots in docs/evidence/workflow-compliance.md |
+| Merge blocked by failed CI | Not demonstrated while branches are unprotected; repeat/check after owner protection |
+| Teammate review counts | Faheem needs 2 distinct PR reviews; Moeer needs 1 more distinct PR review |
+| Instructor collaborator access | Owner must confirm |
+| Dataset/starter source citations | Team must confirm before final submission |
 
-## Retrospective observations
+## Branch protection and release
 
-Feature medians computed before splitting leak evaluation information. Keeping
-imputation inside the fitted model pipeline fixes this. On Windows, ignore rules
-can hide a tracked nested DVC pointer from traversal; the regression test now
-checks untargeted discovery. Authentication failure must not lead to substituting
-datasets or reusing unrelated model scores. CONTRIBUTING.md records these lessons.
-The team must add its own discussion and final conclusions before submission.
+The GitHub API still reports all three permanent branches unprotected.
+Moeer03 has push/triage permissions, not admin/maintain permissions. An owner
+must apply scripts/protect_branches.ps1 -Apply after the new workflow is reviewed
+into dev. The script previews settings by default and refuses application without
+admin permission. Required checks: Branch policy, Lint and tests, Data checks and
+smoke train. Require one approval after the latest push and no force pushes.
+The concrete owner/teammate handoff is in docs/FAHEEM_HANDOFF.md.
 
-## Member contributions
+All further feature/data PRs target dev. The release then proceeds through
+reviewed dev -> staging and staging -> main PRs with independent reproduction
+and identical reported scores. Only then create model-v1.0. A passing synthetic
+smoke test or a release-file existence check is insufficient release evidence.
 
-**Faheem:** Git history attributes the scaffold, initial modules/tests,
-documentation, guardrails and initial Google Drive dataset versioning to Faheem.
-He must supply his final contribution paragraph, experiment evidence and reviews.
+## Retrospective and member contributions
 
-**Moeer:** This checkout uses Moeer03's existing Git identity. Assistant-assisted
-work integrates the exact dataset setup, fixes preprocessing/discovery, and adds
-notebook, pipeline, CI, verification and regression tests. Final PR/review links,
-experiments and Moeer's own contribution statement remain to be completed.
+Earlier feature/data merges skipped integration and staging, and a
+changes-requested review did not stop a merge because branch protections were
+absent. The new branch-policy check and owner protection script address recurrence;
+the historical mistakes remain documented. The team must add its own retrospective
+meeting conclusions and any resulting policy changes.
 
-The saved GitHub authentication identified a different account. Moeer confirmed
-that he will sign in as Moeer03. GitHub writes remain pending that sign-in.
-No teammate approvals or independent results are fabricated.
+**Faheem:** Git history attributes the scaffold, starter modules, original tests,
+guardrails, dataset pointer/Drive setup and synchronization PR to Faheem. His
+personal experiments, reviews and final contribution statement remain required.
+
+**Moeer:** Authored pipeline integration, leakage and Windows DVC fixes, EDA/CI,
+verification helpers, workflow enforcement and this corrected report with assistant
+support. Submitted the changes-requested review on Faheem's PR #4. His real-data
+experiments, another distinct teammate review and final personal statement remain
+required. These activities do not substitute for Faheem's independent work.

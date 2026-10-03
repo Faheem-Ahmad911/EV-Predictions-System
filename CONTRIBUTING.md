@@ -9,7 +9,7 @@ Welcome to the **EV Predictions System** repository! This document defines the e
 Our repository uses a unidirectional flow:
 $$\text{feat / data / exp} \longrightarrow \text{dev} \longrightarrow \text{staging} \longrightarrow \text{main}$$
 
-### Permanent Branches (Protected)
+### Permanent Branches (Protection Required)
 * `main`: Production-ready code only. Contains tagged releases (e.g., `model-v1.0`). **Direct pushes are strictly prohibited.**
 * `staging`: Pre-release candidate branch. Used for full end-to-end reproducibility validation (`dvc pull` and `dvc repro`) before merging to `main`.
 * `dev`: Integration branch where all reviewed feature and data branches land.
@@ -63,3 +63,30 @@ Every PR must use the team checklist and include:
 - Report branch protection, approvals, experiments, and release checks only when their evidence exists. Assistant-assisted implementation does not replace the other member's independent review.
 - Keep the raw-data pointer at data/raw/ev_charging_stations.csv.dvc and the shared storage remote unchanged. Do not substitute another sample when authentication fails.
 - Check that `dvc dag` includes the raw pointer on Windows. A wildcard that matches an empty filename can hide a parent directory from DVC; the data/.gitignore rules and integration test prevent this regression.
+
+## Enforcing the assignment workflow
+
+The `Branch policy` CI check rejects feature/data PRs into main, dev -> main,
+and direct experiment merges. Release PRs into staging or main must include
+dvc.lock and metrics.json with numerical scores and commit provenance. Those
+file checks do not replace independent DVC reproduction or teammate approval.
+
+An exceptional main -> dev synchronization requires a `hotfix-sync` or
+`workflow-recovery` label and an explanation in the PR. Recovery acknowledges
+earlier mistakes; it does not turn them into compliant release history.
+
+After this workflow is reviewed into dev, the repository owner must run:
+
+```powershell
+./scripts/protect_branches.ps1             # Preview the exact settings
+./scripts/protect_branches.ps1 -Apply      # Requires GitHub admin access
+```
+
+The script requires `Branch policy`, `Lint and tests`, and `Data checks and
+smoke train`, one approval after the latest push, resolved discussions, and
+up-to-date branches. It enforces the rules for admins and blocks force pushes
+and deletion. GitHub write access alone does not permit installing these rules.
+
+Do not merge a PR with an unresolved changes-requested review. Do not tag
+model-v1.0 until the dataset, experiment comparison, independent reproduction,
+reviewed staging promotion, and final report are complete.

@@ -271,9 +271,10 @@ must verify the remote from a fresh checkout.
 
 ### Current next action
 
-The dataset is now in [PR #2](https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/2).
-During the October 3 audit it targeted `main`; it must target `dev` to follow the
-assignment. Moeer must finish the verification above before approval.
+The dataset PR [#2](https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/2)
+is merged. It targeted `main`, which skipped the required integration route.
+Future feature/data PRs must target `dev`. The independent Drive pull/hash check
+remains pending; see REPORT.md for the current history and completion status.
 
 ## Complete setup using Faheem's DVC remote
 
@@ -316,10 +317,13 @@ git commit -m "feat: record verified EV dataset baseline"
 # Push only a feature branch, then open a reviewed PR into dev.
 ```
 
-The CI jobs `Lint and tests` and `Data checks and smoke train` run on PRs into
+The CI jobs `Branch policy`, `Lint and tests`, and `Data checks and smoke train` run on PRs into
 `dev`, `staging` and `main`. CI uses a deterministic synthetic fixture, without
 Google credentials. `uv run python -m src.smoke` runs the same isolated smoke test
-locally. Its scores are not dataset or release metrics.
+locally. Its scores are not dataset or release metrics. The Branch policy check
+rejects incorrect PR targets and requires DVC lock/metrics files for staging/main.
+An administrator must make these checks required; CONTRIBUTING.md includes the
+branch-protection command. A file check does not prove independent reproduction.
 
 See [the completion runbook](docs/COMPLETION.md) for experiments, required
 collaboration evidence and the reviewed release sequence. Do not commit scores

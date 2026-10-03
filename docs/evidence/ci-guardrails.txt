@@ -1,0 +1,6 @@
+Lint and tests	Run uv run pytest tests/ -q	2026-10-03T10:04:01.4172309Z 36 passed in 13.09s
+Lint and tests	Prove large-file and fake-secret commits are rejected	2026-10-03T10:04:15.1308169Z Commit probe: large.bin
+Lint and tests	Prove large-file and fake-secret commits are rejected	2026-10-03T10:04:15.1311653Z large.bin (5120 KB) exceeds 1024 KB.
+Lint and tests	Prove large-file and fake-secret commits are rejected	2026-10-03T10:04:15.5584394Z Commit probe: fake-private-key.txt
+Lint and tests	Prove large-file and fake-secret commits are rejected	2026-10-03T10:04:15.5589720Z Secret Type: Private Key
+Lint and tests	Prove large-file and fake-secret commits are rejected	2026-10-03T10:04:15.5632441Z Both actual commit attempts were rejected. No fixture commit was created.

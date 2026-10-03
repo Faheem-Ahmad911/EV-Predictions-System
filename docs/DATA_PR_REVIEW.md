@@ -1,30 +1,22 @@
-# Draft review of PR #2 - verification incomplete
+# Dataset verification history
 
-PR: https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/2
+[PR #2](https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/2) is merged.
+It targeted main and the data commits were included in PR #3. It cannot now be
+retargeted. Neither PR has a recorded approval verifying a fresh DVC download.
 
-Reviewed data branch revision: `04b6007` (October 3, 2026).
+Original local checks at revision 04b6007:
+- Locked dependency sync succeeded; original tests: 4 passed.
+- CSV was ignored by Git and git ls-files returned nothing for it.
+- CSV was absent; actual MD5 unavailable. Pointer size: 6,943,712 bytes.
+- Targeted DVC pull timed out after 40 seconds with no OAuth client configured.
+  This does not establish whether the remote object is missing.
 
-- `uv sync --locked`: passed on Windows, Python 3.14.4.
-- Original branch `uv run pytest`: **4 passed**.
-- DVC pull: **not verified**. No local OAuth client configuration is present.
-  A targeted pull of `data/raw/ev_charging_stations.csv.dvc` exceeded the
-  40-second command timeout. This is not evidence of a missing remote object.
-- Dataset exists: **False**. Actual MD5: **unavailable**. Expected MD5 and size
-  are recorded in the unchanged committed pointer (6,943,712 bytes).
-- `git check-ignore data/raw/ev_charging_stations.csv`: reports the CSV path.
-- `git ls-files data/raw/ev_charging_stations.csv`: empty.
+The Windows ignore-rule discovery fix is now incorporated. The remaining action
+is an authenticated fresh-checkout pull and comparison with the unchanged pointer.
+Moeer reported not having the client JSON. Faheem must share it securely and grant
+folder/OAuth access; each member uses their own Google account and personal token.
 
-Requested changes:
-
-1. Retarget this PR from main to dev, as required by the collaboration workflow.
-2. Fix ignore rules so DVC automatically discovers the nested raw-data pointer
-   on Windows. The original rules caused DVC's Git backend to consider data/
-   ignored, even though the pointer itself is tracked. The completion branch
-   uses data/.gitignore with `/raw/?*`, `!/raw/*.dvc`, and `/processed/` and has
-   a passing cross-platform regression test. Keep the original pointer and remote.
-3. Complete the independent OAuth-authenticated pull and hash check before approval.
-   This part requires the reviewer's client setup and Google account access.
-
-Do not approve on the basis of passing unit tests alone. This document is a
-draft, not a posted GitHub review. Moeer confirmed that the saved GitHub account
-is not the assignment account; posting awaits his sign-in as Moeer03.
+The actual [changes-requested review on PR #4](https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/4#pullrequestreview-5400083470)
+records the missing dataset verification and stale report. PR #4 was merged while
+that review was unresolved. The current correction fixes the report, but it does
+not claim to have verified the dataset or turn that review into an approval.

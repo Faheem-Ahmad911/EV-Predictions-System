@@ -32,6 +32,7 @@ Experiments on that sample do not count as results for Faheem's dataset.
 | [#3](https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/3) | Moeer | feat/moeer-assignment-completion -> main | Merged; CI passed, no recorded teammate approval; bypassed dev/staging |
 | [#4](https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/4) | Faheem | main -> dev | Merged despite Moeer's unresolved changes-requested review; synchronized dev |
 | [#5](https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/5) | Moeer | dev -> main | Merged; CI passed, but skipped staging and independent reproduction |
+| [#6](https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/6) | Moeer | feat/moeer-workflow-compliance -> dev | Workflow corrections; red/green CI recorded; teammate review and merge pending |
 
 main is at ca24eb5, dev at ccdcd63, and staging remains at scaffold commit
 e28273d at this audit. No release tag exists. The later synchronization does not
@@ -60,7 +61,7 @@ reviews of the same PR do not satisfy this requirement.
   [PR #3 CI](https://github.com/Faheem-Ahmad911/EV-Predictions-System/actions/runs/37097204039)
   and [PR #4 CI](https://github.com/Faheem-Ahmad911/EV-Predictions-System/actions/runs/37099230916)
   passed. These use synthetic fixtures and do not prove Drive access or model quality.
-- The workflow-compliance change adds a Branch policy job rejecting incorrect PR
+- PR #6 adds a Branch policy job rejecting incorrect PR
   targets and missing release files. It also verifies that actual large-file and
   fake-secret commit attempts are rejected in a temporary repository.
 - Existing local validation is recorded in docs/evidence/local-validation.md and
@@ -97,7 +98,7 @@ test user if needed. Personal tokens and .dvc/config.local must not be shared.
 | Data-update PR / old-new recovery | Faheem must make a justified update and reviewer must restore both DVC versions |
 | Two-person params conflict | Pending separate authors' changes to the same params line, rebase and recorded resolution |
 | Guardrail evidence | Local rejection logs exist; CI now performs actual rejected commit attempts |
-| Failed and passing CI evidence | Collect actual run links and screenshots on the workflow-compliance PR |
+| Failed and passing CI evidence | PR #6 records actual red/green runs and screenshots in docs/evidence/workflow-compliance.md |
 | Merge blocked by failed CI | Not demonstrated while branches are unprotected; repeat/check after owner protection |
 | Teammate review counts | Faheem needs 2 distinct PR reviews; Moeer needs 1 more distinct PR review |
 | Instructor collaborator access | Owner must confirm |
@@ -111,6 +112,7 @@ must apply scripts/protect_branches.ps1 -Apply after the new workflow is reviewe
 into dev. The script previews settings by default and refuses application without
 admin permission. Required checks: Branch policy, Lint and tests, Data checks and
 smoke train. Require one approval after the latest push and no force pushes.
+The concrete owner/teammate handoff is in docs/FAHEEM_HANDOFF.md.
 
 All further feature/data PRs target dev. The release then proceeds through
 reviewed dev -> staging and staging -> main PRs with independent reproduction

@@ -20,7 +20,7 @@ def evaluate_model(params_path: str = "configs/params.yaml") -> dict:
     processed_dir = Path(params["data"]["processed_dir"])
     target_col = params["data"]["target_column"]
     test_file = processed_dir / "test.csv"
-    model_path = Path("models/model.joblib")
+    model_path = Path(params["train"]["model_path"])
     metrics_file = Path(params["evaluate"]["metrics_file"])
 
     if not model_path.exists():
@@ -56,8 +56,10 @@ def evaluate_model(params_path: str = "configs/params.yaml") -> dict:
         "seed": params["seed"],
     }
 
+    metrics_file.parent.mkdir(parents=True, exist_ok=True)
     with open(metrics_file, "w", encoding="utf-8") as f:
         json.dump(metrics, f, indent=2)
+        f.write("\n")
 
     print("Evaluation Results:")
     print(json.dumps(metrics, indent=2))

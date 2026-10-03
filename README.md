@@ -5,7 +5,7 @@
 [![Code Style](https://img.shields.io/badge/code%20style-ruff-black.svg)](https://github.com/astral-sh/ruff)
 [![Testing](https://img.shields.io/badge/tests-pytest-yellow.svg)](https://pytest.org/)
 
-A production-grade, collaborative Machine Learning repository built to predict **Electric Vehicle (EV) charging costs per kWh (`cost_per_kwh_usd`)** across global charging networks.
+A collaborative Machine Learning assignment repository built to predict **Electric Vehicle (EV) charging costs per kWh (`cost_per_kwh_usd`)** across global charging networks. Release readiness and outstanding team evidence are recorded in [REPORT.md](REPORT.md).
 
 This project demonstrates rigorous Git collaboration, reproducible experiment tracking with **DVC**, automated code hygiene with **pre-commit hooks**, continuous integration with **GitHub Actions**, and a strict multi-tier release lifecycle (`dev` → `staging` → `main`).
 
@@ -27,8 +27,8 @@ The primary objective is that **every result is 100% reproducible by any team me
 
 | Role | Primary Responsibilities | Team Member |
 | :--- | :--- | :--- |
-| **Data & Hygiene Owner** | DVC setup, remote storage, data validation checks, data updates, pre-commit hooks & environment pinning | Member 1 |
-| **Model & Operations Owner** | Pipeline architecture, `params.yaml`, hyperparameter experiments (`dvc exp`), metrics, CI workflow & release tags | Member 2 |
+| **Data & Hygiene Owner** | DVC setup, remote storage, data validation checks, data updates, pre-commit hooks & environment pinning | Faheem Ahmad |
+| **Model & Operations Owner** | Pipeline architecture, `params.yaml`, hyperparameter experiments (`dvc exp`), metrics, CI workflow & release tags | Moeer |
 
 ---
 
@@ -116,3 +116,211 @@ $$\text{feat / data / exp} \longrightarrow \text{dev} \longrightarrow \text{stag
 * **Never push directly to `dev`, `staging`, or `main`.**
 * All changes must arrive via reviewed Pull Requests with passing CI status checks.
 * For more details, see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+---
+
+## Current Collaboration Handoff
+
+This section records the work completed by **Faheem** and the exact checks that
+**Moeer** must perform before reviewing the data pull request. It is intended to
+make the repository state and ownership visible to both team members.
+
+### Work completed by Faheem
+
+Faheem prepared the initial project foundation, including:
+
+- the standard ML repository structure;
+- reusable data preparation, training, evaluation, and utility modules in
+  `src/`;
+- unit tests for data preparation and model training;
+- centralized model and split parameters in `configs/params.yaml`;
+- a pinned `uv` environment using `pyproject.toml` and `uv.lock`;
+- project documentation, contribution rules, branch naming, Conventional
+  Commits, and the pull-request checklist;
+- pre-commit guard rails for Ruff linting/formatting, notebook output removal,
+  YAML/JSON checks, files larger than 1 MB, and secret detection.
+
+### Initial dataset versioning completed by Faheem
+
+The initial EV charging dataset was versioned on the
+`data/initial-dataset` branch.
+
+The following work was completed:
+
+1. DVC and its Google Drive extension were added to the locked project
+   environment.
+2. DVC was initialized in the Git repository.
+3. A shared Google Drive folder was configured as the default DVC remote named
+   `storage`.
+4. The raw dataset was added to DVC at:
+
+   ```text
+   data/raw/ev_charging_stations.csv
+   ```
+
+5. Git tracks only the pointer file:
+
+   ```text
+   data/raw/ev_charging_stations.csv.dvc
+   ```
+
+6. The raw CSV remains ignored by Git and is therefore not stored in GitHub
+   history.
+7. The pointer records this verified dataset metadata:
+
+   ```text
+   MD5: 5ee5ca7671e292af3ace03eddfb8031d
+   Size: 6,943,712 bytes
+   ```
+
+8. The dataset object was uploaded successfully to the shared Google Drive
+   remote (`1 file pushed`).
+9. The Google Drive authentication dependency was updated to a current
+   `pyOpenSSL` release compatible with the locked `cryptography` package.
+10. OAuth credentials were saved only in `.dvc/config.local`. This file is
+    ignored by Git; no client secret, access token, or user credential is
+    committed to the repository.
+
+### Commits on the data branch
+
+The data branch contains these Faheem-authored commits:
+
+```text
+690b630 data: version initial dataset with DVC and Google Drive
+c7a611f fix: update Google Drive authentication dependency
+```
+
+### Required review by Moeer
+
+Moeer must not approve the data pull request from the GitHub diff alone. He
+must verify the remote from a fresh checkout.
+
+1. Update or clone the repository and check out the data branch:
+
+   ```bash
+   git fetch origin
+   git switch --track origin/data/initial-dataset
+   ```
+
+   If the local branch already exists:
+
+   ```bash
+   git switch data/initial-dataset
+   git pull origin data/initial-dataset
+   ```
+
+2. Install the exact locked environment:
+
+   ```bash
+   uv sync
+   ```
+
+3. Confirm the raw CSV is not present before pulling, if testing from a clean
+   clone.
+4. Run:
+
+   ```bash
+   uv run dvc pull
+   ```
+
+5. Complete Google authorization using Moeer's own Google account. Moeer must
+   have access to the shared Drive folder and must never receive Faheem's local
+   OAuth token or `.dvc/config.local` file.
+6. Verify the downloaded file:
+
+   ```powershell
+   Test-Path data/raw/ev_charging_stations.csv
+   Get-FileHash -Algorithm MD5 data/raw/ev_charging_stations.csv
+   ```
+
+7. The expected results are:
+
+   ```text
+   File exists: True
+   MD5: 5EE5CA7671E292AF3ACE03EDDFB8031D
+   ```
+
+8. Run the existing tests:
+
+   ```bash
+   uv run pytest
+   ```
+
+9. Confirm that the CSV is not tracked by Git:
+
+   ```bash
+   git check-ignore data/raw/ev_charging_stations.csv
+   git ls-files data/raw/ev_charging_stations.csv
+   ```
+
+   The first command should report the ignored CSV path. The second command
+   should print nothing.
+10. Post the DVC pull result, hash verification, and test result in the pull
+    request review before approving it.
+
+### Security rules for both members
+
+- Never commit `.dvc/config.local`, OAuth JSON files, Google access tokens, or
+  downloaded client-secret files.
+- Never add the raw CSV using `git add`.
+- Run `uv run dvc push` before `git push` whenever DVC-tracked data or models
+  change.
+- Each member must authenticate using their own Google account.
+- Both members must preserve their own commits, pull requests, and review
+  history because individual contribution is part of the assignment grade.
+
+### Current next action
+
+The dataset is now in [PR #2](https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/2).
+During the October 3 audit it targeted `main`; it must target `dev` to follow the
+assignment. Moeer must finish the verification above before approval.
+
+## Complete setup using Faheem's DVC remote
+
+Run from the repository root. The original raw pointer and remote are preserved;
+there is no alternative download or replacement dataset in this pipeline.
+
+```powershell
+uv sync --locked
+uv run pre-commit install
+# Use the client JSON Faheem sends securely. Keep the file outside this repo.
+uv run python -m src.configure_drive "C:/path/outside-repo/client.json"
+# Authorize with your own Google account, shared-folder access and OAuth test-user access.
+uv run dvc pull
+uv run python -m src.verify_dataset
+uv run dvc dag
+uv run dvc repro
+uv run pytest
+uv run pre-commit run --all-files
+```
+
+`src.configure_drive` writes the client ID and secret only to ignored
+`.dvc/config.local`, without printing them. Never copy another member's token or
+local config. `src.verify_dataset` checks the pointer's MD5 and size, schema,
+ranges, null counts and Git ignore/tracking status. The DVC graph must show
+`data/raw/ev_charging_stations.csv.dvc -> prepare -> train -> evaluate`.
+
+All learned imputation/encoding/scaling fits after the split, inside the model
+pipeline. `configs/params.yaml` controls the paths, seed, split and model settings.
+The notebook pair is `notebooks/01-eda.ipynb` and `notebooks/01-eda.py`.
+
+```powershell
+# After the exact dataset is available, restart and execute all notebook cells.
+uv run jupyter nbconvert --to notebook --execute --inplace notebooks/01-eda.ipynb
+uv run nbstripout notebooks/01-eda.ipynb
+uv run jupytext --sync notebooks/01-eda.ipynb
+# After a real-data reproduction, preserve and upload all resulting artifacts.
+uv run dvc push
+git add dvc.yaml dvc.lock configs/params.yaml metrics.json
+git commit -m "feat: record verified EV dataset baseline"
+# Push only a feature branch, then open a reviewed PR into dev.
+```
+
+The CI jobs `Lint and tests` and `Data checks and smoke train` run on PRs into
+`dev`, `staging` and `main`. CI uses a deterministic synthetic fixture, without
+Google credentials. `uv run python -m src.smoke` runs the same isolated smoke test
+locally. Its scores are not dataset or release metrics.
+
+See [the completion runbook](docs/COMPLETION.md) for experiments, required
+collaboration evidence and the reviewed release sequence. Do not commit scores
+or a DVC lock from a substitute dataset to satisfy missing release evidence.

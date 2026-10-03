@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [dev, staging, main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Lint and tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.12.22"
+          enable-cache: true
+      - run: uv sync --locked --python 3.14.4
+      - run: uv run ruff check .
+      - run: uv run ruff format --check .
+      - run: uv run pytest tests/ -q
+      - run: uv run pre-commit run --all-files
+  smoke:
+    name: Data checks and smoke train
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.12.22"
+          enable-cache: true
+      - run: uv sync --locked --python 3.14.4
+      - name: Validate deterministic sample and execute prepare, train, evaluate
+        run: uv run python -m src.smoke --output artifacts/smoke-metrics.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: synthetic-smoke-metrics
+          path: artifacts/smoke-metrics.json

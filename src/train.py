@@ -6,6 +6,7 @@ import joblib
 import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
@@ -38,10 +39,33 @@ def build_pipeline(
         transformers=[
             (
                 "cat",
-                OneHotEncoder(handle_unknown="ignore", sparse_output=False),
+                Pipeline(
+                    [
+                        (
+                            "imputer",
+                            SimpleImputer(strategy="constant", fill_value="Unknown"),
+                        ),
+                        (
+                            "encoder",
+                            OneHotEncoder(handle_unknown="ignore", sparse_output=False),
+                        ),
+                    ]
+                ),
                 categorical_features,
             ),
-            ("num", StandardScaler(), numeric_features),
+            (
+                "num",
+                Pipeline(
+                    [
+                        (
+                            "imputer",
+                            SimpleImputer(strategy="median", keep_empty_features=True),
+                        ),
+                        ("scaler", StandardScaler()),
+                    ]
+                ),
+                numeric_features,
+            ),
         ],
         remainder="drop",
     )
@@ -59,6 +83,8 @@ def build_pipeline(
 def train_model(params_path: str = "configs/params.yaml") -> None:
     """Train the model and save the fitted pipeline artifact."""
     params = load_params(params_path)
+    if params["train"]["model"] != "random_forest":
+        raise ValueError("Only train.model=random_forest is supported")
     processed_dir = Path(params["data"]["processed_dir"])
     target_col = params["data"]["target_column"]
     train_file = processed_dir / "train.csv"
@@ -85,9 +111,8 @@ def train_model(params_path: str = "configs/params.yaml") -> None:
     )
     pipeline.fit(X_train, y_train)
 
-    models_dir = Path("models")
-    models_dir.mkdir(parents=True, exist_ok=True)
-    model_path = models_dir / "model.joblib"
+    model_path = Path(params["train"]["model_path"])
+    model_path.parent.mkdir(parents=True, exist_ok=True)
     joblib.dump(pipeline, model_path)
     print(f"Model saved successfully to {model_path}")
 

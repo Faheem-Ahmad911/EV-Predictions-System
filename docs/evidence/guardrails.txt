@@ -1,0 +1,30 @@
+October 3, 2026: actual local hook checks. Fixtures removed; never committed.
+
+Hook: check-added-large-files
+Exit: 1
+check for added large files..............................................Failed
+- hook id: check-added-large-files
+- exit code: 1
+
+artifacts/codex-guardrail-probe/large.bin (5120 KB) exceeds 1024 KB.
+
+
+
+Hook: detect-secrets
+Exit: 1
+Detect secrets...........................................................Failed
+- hook id: detect-secrets
+- exit code: 1
+
+ERROR: Potential secrets about to be committed to git repo!
+
+Secret Type: Private Key
+Location:    artifacts\codex-guardrail-probe\fake-private-key.txt:1
+
+Possible mitigations:
+  - For information about putting your secrets in a safer place, please ask in
+    #security
+  - Mark false positives with an inline `pragma: allowlist secret` comment
+
+If a secret has already been committed, visit
+https://help.github.com/articles/removing-sensitive-data-from-a-repository

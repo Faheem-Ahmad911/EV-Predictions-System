@@ -10,6 +10,7 @@ from src.train import build_pipeline
 @pytest.fixture
 def dummy_train_data():
     """Create synthetic training data for model pipeline test."""
+    rng = np.random.default_rng(42)
     data = {
         "country": ["United States", "Germany", "Norway", "France", "Japan"] * 10,
         "network": ["Tesla", "Ionity", "ChargePoint", "EVgo", "Electrify America"] * 10,
@@ -30,12 +31,12 @@ def dummy_train_data():
         ]
         * 10,
         "accessibility": ["Public", "Public", "Private", "Public", "Public"] * 10,
-        "latitude": np.random.uniform(20.0, 60.0, 50),
-        "longitude": np.random.uniform(-120.0, 20.0, 50),
-        "connectors_available": np.random.randint(1, 10, 50),
-        "max_power_kw": np.random.choice([22, 50, 150, 250, 350], 50),
-        "install_year": np.random.choice([2020, 2021, 2022, 2023, 2024], 50),
-        "cost_per_kwh_usd": np.random.uniform(0.15, 0.55, 50),
+        "latitude": rng.uniform(20.0, 60.0, 50),
+        "longitude": rng.uniform(-120.0, 20.0, 50),
+        "connectors_available": rng.integers(1, 10, 50),
+        "max_power_kw": rng.choice([22, 50, 150, 250, 350], 50),
+        "install_year": rng.choice([2020, 2021, 2022, 2023, 2024], 50),
+        "cost_per_kwh_usd": rng.uniform(0.15, 0.55, 50),
     }
     return pd.DataFrame(data)
 

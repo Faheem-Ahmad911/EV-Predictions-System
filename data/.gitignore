@@ -1,0 +1,5 @@
+# Require at least one filename character: /raw/* can hide /raw/ from
+# DVC's Git backend on Windows, preventing discovery of the nested pointer.
+/raw/?*
+!/raw/*.dvc
+/processed/

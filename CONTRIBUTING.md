@@ -52,3 +52,14 @@ Every PR must use the team checklist and include:
 - [ ] `dvc push` done before `git push` (if data or models changed)
 - [ ] Notebook restarted and run top to bottom (if notebooks changed)
 - [ ] Style and naming: `ruff check` and `pytest` pass cleanly
+
+## Reproducibility lessons from implementation
+
+- Fit imputation, scaling, and encoding only within the training pipeline; never compute feature statistics before the split.
+- Run `uv sync --locked` and test DVC's storage backend as well as the model dependencies. Regenerate a conflicted uv.lock from the combined pyproject.toml, then validate it.
+- DVC content hashes are not credentials. Generated .dvc pointer files and dvc.lock are excluded from the secret hook, while remote configuration and source files remain scanned.
+- Keep CI synthetic data/results visibly separate from real-data experiment and release results.
+- A cached DVC reproduction preserves the training SHA. A forced rerun at another commit logs the new SHA; compare metrics and provenance separately rather than editing provenance to match.
+- Report branch protection, approvals, experiments, and release checks only when their evidence exists. Assistant-assisted implementation does not replace the other member's independent review.
+- Keep the raw-data pointer at data/raw/ev_charging_stations.csv.dvc and the shared storage remote unchanged. Do not substitute another sample when authentication fails.
+- Check that `dvc dag` includes the raw pointer on Windows. A wildcard that matches an empty filename can hide a parent directory from DVC; the data/.gitignore rules and integration test prevent this regression.

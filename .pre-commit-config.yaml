@@ -12,7 +12,7 @@ repos:
 
   # 2. Python Linting and Formatting with Ruff
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.9.10
+    rev: v0.16.9
     hooks:
       - id: ruff
         args: [--fix]
@@ -29,4 +29,7 @@ repos:
     rev: v1.5.0
     hooks:
       - id: detect-secrets
-        args: ['--baseline', '.secrets.baseline']
+        args: ['--baseline', '.secrets.baseline', '--exclude-lines', '"commit_sha": "[0-9a-f]{40}"']
+        # Git provenance in metrics is a public identifier, not an API key.
+        # Generated content hashes are not credentials; config files stay scanned.
+        exclude: '(\.dvc$|^dvc\.lock$)'

@@ -3,10 +3,12 @@ name = "ev-predictions-system"
 version = "0.1.0"
 requires-python = ">=3.13"
 dependencies = [
+    "dvc[gdrive]>=3.67.1",
     "joblib>=1.6.0",
     "numpy>=2.5.3",
     "openpyxl>=3.1.5",
     "pandas>=3.0.6",
+    "pyopenssl>=25.3.0",
     "pyyaml>=6.0.3",
     "scikit-learn>=1.9.1",
 ]
@@ -14,7 +16,10 @@ dependencies = [
 [dependency-groups]
 dev = [
     "detect-secrets>=1.5.0",
+    "ipykernel>=7.4.0",
     "jupytext>=1.19.5",
+    "matplotlib>=3.11.2",
+    "nbconvert>=7.17.1",
     "nbstripout>=0.9.1",
     "pre-commit>=4.6.2",
     "pytest>=9.1.1",

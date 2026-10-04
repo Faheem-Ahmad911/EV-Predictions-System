@@ -5,12 +5,14 @@ but no repository admin permission. The assignment is not yet complete; use
 REPORT.md and docs/COMPLETION.md as the current audit rather than treating prior
 merged PRs as proof of compliance.
 
-1. PR #6 already merged into dev on October 3 without a teammate review. Do not
-   attempt to merge it again or claim it was approved. Inspect its changes and
-   the current audit-correction PR, submit an actual review, and approve future
-   PRs before merging. The intentional failed test was removed and CI passed.
-2. Enable protection on dev, staging and main using your administrator account.
-   After pulling the reviewed changes, preview then apply:
+1. PR #7 was approved and merged by Faheem after green CI on October 4. That
+   is one distinct teammate PR review for Faheem; both members still need one
+   more distinct teammate PR review. Review the current protection-audit PR
+   before merging it. PR #6 remains a historical merge without prior approval.
+2. dev and staging now report protected; main still reports unprotected. Enable
+   main protection and verify all three branches require one approval, the three
+   named CI checks, and no force pushes. Moeer03 cannot inspect detailed settings
+   through the API. As administrator, preview then apply the existing script:
 
    ```powershell
    ./scripts/protect_branches.ps1

@@ -8,12 +8,14 @@
    fresh checkout. Record the actual dvc pull output and matching MD5. Then execute
    the notebook and real pipeline, commit dvc.lock/metrics.json, dvc push, and open
    a feature PR into dev. Do not substitute the older local Kaggle sample.
-3. PR #6 has already merged into dev without a recorded review. Faheem reviews
-   the current audit-correction PR and future feature PRs before they merge.
-   No direct feature or dev PR goes into main.
-4. The owner applies scripts/protect_branches.ps1 -Apply (preview without -Apply).
-   This requires GitHub admin access; Moeer03 currently has push access only.
-   Verify both approvals and failed required checks actually block merging.
+3. PR #7 is now approved and merged by Faheem. Both members need one more
+   distinct teammate PR review. Review future feature PRs before they merge;
+   do not route feature branches or dev directly into main.
+4. dev and staging report protected; main is still unprotected. The owner enables
+   main protection and verifies required approvals, all CI checks and no force
+   pushes on all three branches. scripts/protect_branches.ps1 -Apply configures
+   these requirements (preview without -Apply). Moeer03 lacks admin access.
+   Capture proof that failed required checks actually block merging.
 5. Both members run at least three experiments from committed code on their own
    exp branches created from dev. Save dvc exp show, data hash and rationale. Promote
    winners to feat branches with reviewed PRs; preserve a rejected exp branch.

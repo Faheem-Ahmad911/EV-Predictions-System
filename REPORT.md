@@ -34,7 +34,9 @@ Experiments on that sample do not count as results for Faheem's dataset.
 | [#5](https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/5) | Moeer | dev -> main | Merged; CI passed, but skipped staging and independent reproduction |
 | [#6](https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/6) | Moeer | feat/moeer-workflow-compliance -> dev | Merged by Moeer03 without a recorded teammate review; CI passed and target was dev, but approval requirement was not met |
 
-main is at ca24eb5, dev at ec5e95f, and staging remains at scaffold commit
+| [#7](https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/7) | Moeer | feat/moeer-audit-update -> dev | Faheem approved the final commit and merged after passing CI on October 4 |
+
+main is at ca24eb5, dev at ddd2dc2, and staging remains at scaffold commit
 e28273d at this audit. No release tag exists. The later synchronization does not
 retroactively make the earlier merges compliant. Keep this history visible.
 
@@ -43,8 +45,8 @@ asked for accurate reporting and independent DVC verification. The inaccurate
 report is corrected in the workflow-compliance feature branch. Dataset
 verification remains unresolved; that review has not become an approval.
 
-Numerical authored-merge counts are Faheem 3 and Moeer 3, but #4/#5 are
-synchronization PRs. Recorded teammate-review coverage remains Faheem 0 PRs,
+Numerical authored-merge counts are Faheem 3 and Moeer 4, but #4/#5 are
+synchronization PRs. Recorded teammate-review coverage is Faheem 1 PR,
 Moeer 1 PR. Each member must review at least two distinct teammate PRs; repeated
 reviews of the same PR do not satisfy this requirement.
 
@@ -99,14 +101,17 @@ test user if needed. Personal tokens and .dvc/config.local must not be shared.
 | Two-person params conflict | Pending separate authors' changes to the same params line, rebase and recorded resolution |
 | Guardrail evidence | Local rejection logs exist; CI now performs actual rejected commit attempts |
 | Failed and passing CI evidence | PR #6 records actual red/green runs and screenshots in docs/evidence/workflow-compliance.md |
-| Merge blocked by failed CI | Not demonstrated while branches are unprotected; repeat/check after owner protection |
-| Teammate review counts | Faheem needs 2 distinct PR reviews; Moeer needs 1 more distinct PR review |
+| Merge blocked by failed CI | Not yet demonstrated; verify required checks on protected dev with owner evidence |
+| Teammate review counts | Both Faheem and Moeer need 1 more distinct teammate PR review |
 | Instructor collaborator access | Owner must confirm |
 | Dataset/starter source citations | Team must confirm before final submission |
 
 ## Branch protection and release
 
-The GitHub API still reports all three permanent branches unprotected.
+The October 4 recheck reports dev and staging protected, but main unprotected.
+Detailed protection API requests return HTTP 404 to Moeer03; this is not proof
+that protected branches lack rules. The owner must verify required approvals,
+all three status checks and force-push blocking, and supply settings evidence.
 Moeer03 has push/triage permissions, not admin/maintain permissions. An owner
 must apply scripts/protect_branches.ps1 -Apply. The workflow is now in dev,
 but PR #6 merged without the required teammate review. The script previews settings by default and refuses application without

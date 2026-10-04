@@ -102,7 +102,7 @@ test user if needed. Personal tokens and .dvc/config.local must not be shared.
 | Failed and passing CI evidence | PR #6 records actual red/green runs and screenshots in docs/evidence/workflow-compliance.md |
 | Merge blocked by failed CI | Not yet demonstrated; verify required checks on protected dev with owner evidence |
 | Teammate review counts | Both Faheem and Moeer need 1 more distinct teammate PR review |
-| Instructor collaborator access | Owner must confirm |
+| Instructor collaborator access | Excluded from the requested scope by Moeer on October 4; no invitation will be sent |
 | Dataset/starter source citations | Team must confirm before final submission |
 
 ## Branch protection and release

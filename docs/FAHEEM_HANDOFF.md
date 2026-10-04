@@ -21,8 +21,8 @@ merged PRs as proof of compliance.
 
    This requires GitHub CLI installed as gh and signed in as the administrator.
    Verify one approval, all three required checks and no force pushes in GitHub.
-   Confirm the instructor has collaborator access. Record a genuinely blocked
-   merge with failing CI after protection is active.
+   Record a genuinely blocked merge with failing CI after protection is active.
+   Moeer has excluded instructor access from scope; do not invite the instructor.
 3. Securely send Moeer the OAuth client JSON outside GitHub. Grant his Google
    account access to the existing Drive folder and add it to OAuth test users
    if the app is in testing. Do not send your token or .dvc/config.local.

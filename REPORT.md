@@ -33,7 +33,6 @@ Experiments on that sample do not count as results for Faheem's dataset.
 | [#4](https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/4) | Faheem | main -> dev | Merged despite Moeer's unresolved changes-requested review; synchronized dev |
 | [#5](https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/5) | Moeer | dev -> main | Merged; CI passed, but skipped staging and independent reproduction |
 | [#6](https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/6) | Moeer | feat/moeer-workflow-compliance -> dev | Merged by Moeer03 without a recorded teammate review; CI passed and target was dev, but approval requirement was not met |
-
 | [#7](https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/7) | Moeer | feat/moeer-audit-update -> dev | Faheem approved the final commit and merged after passing CI on October 4 |
 
 main is at ca24eb5, dev at ddd2dc2, and staging remains at scaffold commit

@@ -5,10 +5,10 @@ but no repository admin permission. The assignment is not yet complete; use
 REPORT.md and docs/COMPLETION.md as the current audit rather than treating prior
 merged PRs as proof of compliance.
 
-1. Review [PR #6](https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/6)
-   at its latest revision, inspect its checks, and approve only after review.
-   Squash-merge it into dev after it passes. Its intentional failed CI test has
-   been removed; the red run is evidence of the assignment demonstration.
+1. PR #6 already merged into dev on October 3 without a teammate review. Do not
+   attempt to merge it again or claim it was approved. Inspect its changes and
+   the current audit-correction PR, submit an actual review, and approve future
+   PRs before merging. The intentional failed test was removed and CI passed.
 2. Enable protection on dev, staging and main using your administrator account.
    After pulling the reviewed changes, preview then apply:
 

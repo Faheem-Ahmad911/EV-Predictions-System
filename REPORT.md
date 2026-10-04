@@ -1,6 +1,6 @@
 # EV Predictions System - assignment progress and evidence
 
-Audit date: October 3, 2026. Repository:
+Audit date: October 4, 2026. Repository:
 https://github.com/Faheem-Ahmad911/EV-Predictions-System
 
 **Status: code and CI are implemented; the dataset-based release is incomplete.**
@@ -32,9 +32,9 @@ Experiments on that sample do not count as results for Faheem's dataset.
 | [#3](https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/3) | Moeer | feat/moeer-assignment-completion -> main | Merged; CI passed, no recorded teammate approval; bypassed dev/staging |
 | [#4](https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/4) | Faheem | main -> dev | Merged despite Moeer's unresolved changes-requested review; synchronized dev |
 | [#5](https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/5) | Moeer | dev -> main | Merged; CI passed, but skipped staging and independent reproduction |
-| [#6](https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/6) | Moeer | feat/moeer-workflow-compliance -> dev | Workflow corrections; red/green CI recorded; teammate review and merge pending |
+| [#6](https://github.com/Faheem-Ahmad911/EV-Predictions-System/pull/6) | Moeer | feat/moeer-workflow-compliance -> dev | Merged by Moeer03 without a recorded teammate review; CI passed and target was dev, but approval requirement was not met |
 
-main is at ca24eb5, dev at ccdcd63, and staging remains at scaffold commit
+main is at ca24eb5, dev at ec5e95f, and staging remains at scaffold commit
 e28273d at this audit. No release tag exists. The later synchronization does not
 retroactively make the earlier merges compliant. Keep this history visible.
 
@@ -43,7 +43,7 @@ asked for accurate reporting and independent DVC verification. The inaccurate
 report is corrected in the workflow-compliance feature branch. Dataset
 verification remains unresolved; that review has not become an approval.
 
-Numerical authored-merge counts are Faheem 3 and Moeer 2, but #4/#5 are
+Numerical authored-merge counts are Faheem 3 and Moeer 3, but #4/#5 are
 synchronization PRs. Recorded teammate-review coverage remains Faheem 0 PRs,
 Moeer 1 PR. Each member must review at least two distinct teammate PRs; repeated
 reviews of the same PR do not satisfy this requirement.
@@ -108,8 +108,8 @@ test user if needed. Personal tokens and .dvc/config.local must not be shared.
 
 The GitHub API still reports all three permanent branches unprotected.
 Moeer03 has push/triage permissions, not admin/maintain permissions. An owner
-must apply scripts/protect_branches.ps1 -Apply after the new workflow is reviewed
-into dev. The script previews settings by default and refuses application without
+must apply scripts/protect_branches.ps1 -Apply. The workflow is now in dev,
+but PR #6 merged without the required teammate review. The script previews settings by default and refuses application without
 admin permission. Required checks: Branch policy, Lint and tests, Data checks and
 smoke train. Require one approval after the latest push and no force pushes.
 The concrete owner/teammate handoff is in docs/FAHEEM_HANDOFF.md.

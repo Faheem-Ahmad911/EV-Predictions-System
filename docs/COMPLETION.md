@@ -8,8 +8,9 @@
    fresh checkout. Record the actual dvc pull output and matching MD5. Then execute
    the notebook and real pipeline, commit dvc.lock/metrics.json, dvc push, and open
    a feature PR into dev. Do not substitute the older local Kaggle sample.
-3. Faheem reviews the workflow-compliance PR into dev. Once its checks pass and
-   review is resolved, squash-merge it. No direct feature or dev PR goes into main.
+3. PR #6 has already merged into dev without a recorded review. Faheem reviews
+   the current audit-correction PR and future feature PRs before they merge.
+   No direct feature or dev PR goes into main.
 4. The owner applies scripts/protect_branches.ps1 -Apply (preview without -Apply).
    This requires GitHub admin access; Moeer03 currently has push access only.
    Verify both approvals and failed required checks actually block merging.
